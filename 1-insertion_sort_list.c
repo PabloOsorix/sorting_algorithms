@@ -10,16 +10,18 @@
 
 void insertion_sort_list(listint_t **list)
 {
-    listint_t *tmp = NULL;
+    listint_t *tmp = NULL, *s_tmp = NULL,*head = NULL;
     int counter = 1;
-
+    head = malloc(sizeof(listint_t));
     tmp = malloc(sizeof(listint_t));
-    if (!tmp)
+    s_tmp = malloc(sizeof(listint_t));
+    if (!tmp || !head)
         return;
 
     if ((!list || !(*list)->n))
         return;
 
+    head = *list;
     while(counter != 0)
     {
         counter = 0;
@@ -27,25 +29,30 @@ void insertion_sort_list(listint_t **list)
         {
             if ((*list)->next != NULL && (*list)->prev == NULL)
             {
-                tmp = (*list)->next;
-                (*list)->next = (*list)->next->next;
-                (*list)->prev = tmp;
-                tmp->next = *list;
-                *list = tmp;
-                print_list(*list);
-                counter+= 1;
-                *list = (*list)->next;
+                if((*list)->n > (*list)->next->n)
+                {
+                    tmp = (*list)->next;
+                    (*list)->next = (*list)->next->next;
+                    (*list)->prev = tmp;
+                    tmp->next = *list;
+                    /*list = tmp;*/
+                    print_list(head);
+                    counter+= 1;
+                    *list = (*list)->next;
+                    continue;
+                }
             }
-            else if((*list)->n > (*list)->next->n)
+            if((*list)->n > (*list)->next->n)
             {
-                tmp = (*list)->next;
+                s_tmp = (*list)->next;
                 (*list)->next = (*list)->next->next;
                 (*list)->prev = tmp;
-                tmp->next = *list;
-                *list = tmp;
-                print_list(*list);
+                s_tmp->prev = (*list)->prev;
+                s_tmp->next = *list;
+                /*list = tmp;*/
+                /*(*list)->prev = s_tmp;*/
+                print_list(head);
                 counter+= 1;
-                *list = (*list)->next;
             }
             /**else if((*list)->prev != NULL && counter != 0);
             {
@@ -62,9 +69,8 @@ void insertion_sort_list(listint_t **list)
                 }
             }*/
             *list = (*list)->next;
-            continue;
         }
-
+        /*list = (*list)->next;*/
 
 
     }
