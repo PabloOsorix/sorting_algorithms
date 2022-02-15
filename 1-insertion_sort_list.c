@@ -32,10 +32,13 @@ void insertion_sort_list(listint_t **list)
                 if((*list)->n > (*list)->next->n)
                 {
                     tmp = (*list)->next;
+                    (*list)->next->next->prev = *list;
                     (*list)->next = (*list)->next->next;
                     (*list)->prev = tmp;
                     tmp->next = *list;
-                    /*list = tmp;*/
+                    tmp->prev  = NULL;
+                    *list = tmp;
+                    head = *list;
                     print_list(head);
                     counter+= 1;
                     *list = (*list)->next;
@@ -45,33 +48,52 @@ void insertion_sort_list(listint_t **list)
             if((*list)->n > (*list)->next->n)
             {
                 s_tmp = (*list)->next;
-                (*list)->next = (*list)->next->next;
-                (*list)->prev = tmp;
                 s_tmp->prev = (*list)->prev;
+                (*list)->next = (*list)->next->next;
+                (*list)->prev->next = s_tmp;
+                (*list)->prev = s_tmp;
                 s_tmp->next = *list;
-                /*list = tmp;*/
-                /*(*list)->prev = s_tmp;*/
+                *list = s_tmp;
                 print_list(head);
                 counter+= 1;
-            }
-            /**else if((*list)->prev != NULL && counter != 0);
-            {
-                while((*list)->prev->n < (*list)->n)
+                if ((*list)->prev->n > (*list)->n)
                 {
-                    tmp = (*list)->prev;
-                    (*list)->prev = (*list)->prev->prev;
-                    (*list)->next = tmp;
-                    tmp->prev = *list;
-                    *list = tmp;
-                    print_list(*list);
-                    *list = (*list)->prev;
-                    continue;
+                    while((*list)->n < (*list)->prev->n)
+                    {
+                        tmp = (*list)->prev;
+                        if (tmp->prev != NULL)
+                        {
+                            tmp->prev->next = *list;
+                            (*list)->prev = (*list)->prev->prev;
+                            if ((*list)->next != NULL)
+                            {
+                                tmp->next = (*list)->next;
+                                (*list)->next->prev = tmp;
+                            }
+                            else
+                                tmp->next = NULL;
+                            (*list)->next = tmp;
+                            tmp->prev = *list;
+                            print_list(head);
+
+                        }
+                        else
+                        {
+                            tmp->next = (*list)->next;
+                            (*list)->next->prev = tmp;
+                            tmp->prev = *list;
+                            (*list)->prev = NULL;
+                            (*list)->next = tmp;
+                            head = *list;
+                            print_list(head);
+                            break;
+                        }
+                    }
+
                 }
-            }*/
+            }
             *list = (*list)->next;
         }
-        /*list = (*list)->next;*/
-
-
     }
+    *list = head;
 }
