@@ -1,99 +1,83 @@
 #include "sort.h"
-
 /**
- * insertion_sort_list - unction that sorts
- * a doubly linked list of integers in ascending
- * order using the Insertion sort algorithm
- * @list: double linked list to sort
- * Return - None is void
+ * swap_nodes - Function that takes two nodes belonging to a
+ * doubly linked list and swaps their positions
+ * @left: First node to be swapped
+ * @right: second node to be swapped
+ * @list: List to which the nodes belong
+ * Return: Void
  */
+void swap_nodes(listint_t **list, listint_t *left, listint_t *right)
+{
+	listint_t *swapperVector[4];
 
+	swapperVector[0] = left->next;
+	swapperVector[1] = left->prev;
+	swapperVector[2] = right->next;
+	swapperVector[3] = right->prev;
+	if (*list == swapperVector[3])
+	{
+		*list = right;
+	}
+	if (swapperVector[3]->prev)
+	{
+		swapperVector[3]->prev->next = swapperVector[0];
+	}
+	if (right->next)
+	{
+		right->next->prev = swapperVector[3];
+	}
+	swapperVector[3]->next = swapperVector[2];
+	swapperVector[3]->prev = swapperVector[0];
+	right->next = swapperVector[3];
+	right->prev = swapperVector[1];
+}
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers in ascending
+ * order using the Insertion sort algorithm
+ * @list: Doubly linked list
+ * Return: Void
+ */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *tmp = NULL, *s_tmp = NULL,*head = NULL;
-	int counter = 1;
-	head = malloc(sizeof(listint_t));
-	tmp = malloc(sizeof(listint_t));
-	s_tmp = malloc(sizeof(listint_t));
-	if (!tmp || !head || !s_tmp)
-		return;
+	listint_t *right = NULL, *left = NULL, *tmp = NULL, *tmp2 = NULL;
+	int unordered = 1;
 
-	if ((!list || !(*list)->n))
+	if (list == NULL || *list == NULL)
 		return;
-
-	head = *list;
-	while(counter != 0)
+	left = *list, right = left->next;
+	while (unordered == 1)
 	{
-		counter = 0;
-		for (;(*list)->next != NULL;)
+		unordered = 0;
+		while (right)
 		{
-			if ((*list)->next != NULL && (*list)->prev == NULL)
+			tmp = right->next, tmp2 = tmp;
+			if (left->n > right->n)
 			{
-				if((*list)->n > (*list)->next->n)
+				unordered = 1;
+				swap_nodes(&(*list), left, right), print_list(*list), tmp = right->prev;
+				while (tmp)
 				{
-					tmp = (*list)->next;
-					(*list)->next->next->prev = *list;
-					(*list)->next = (*list)->next->next;
-					(*list)->prev = tmp;
-					tmp->next = *list;
-					tmp->prev  = NULL;
-					*list = tmp;
-					head = *list;
-					print_list(head);
-					counter+= 1;
-					*list = (*list)->next;
-					continue;
-				}
-			}
-			if((*list)->n > (*list)->next->n)
-			{
-				s_tmp = (*list)->next;
-				s_tmp->prev = (*list)->prev;
-				(*list)->next = (*list)->next->next;
-				(*list)->prev->next = s_tmp;
-				(*list)->prev = s_tmp;
-				s_tmp->next = *list;
-				*list = s_tmp;
-				print_list(head);
-				counter+= 1;
-				if ((*list)->prev->n > (*list)->n)
-				{
-					while((*list)->n < (*list)->prev->n)
+					if (tmp->n > right->n)
 					{
-						tmp = (*list)->prev;
-						if (tmp->prev != NULL)
-						{
-							tmp->prev->next = *list;
-							(*list)->prev = (*list)->prev->prev;
-							if ((*list)->next != NULL)
-							{
-								tmp->next = (*list)->next;
-								(*list)->next->prev = tmp;
-							}
-							else
-								tmp->next = NULL;
-							(*list)->next = tmp;
-							tmp->prev = *list;
-							print_list(head);
-
-						}
-						else
-						{
-							tmp->next = (*list)->next;
-							(*list)->next->prev = tmp;
-							tmp->prev = *list;
-							(*list)->prev = NULL;
-							(*list)->next = tmp;
-							head = *list;
-							print_list(head);
-							break;
-						}
+						swap_nodes(&(*list), tmp, right), print_list(*list), tmp = right->prev;
 					}
-
+					else
+					break;
 				}
+				if (left)
+					right = left->next;
+				if (!right)
+					break;
 			}
-			*list = (*list)->next;
+			right = tmp2;
+			if (right)
+				left = right->prev;
 		}
+		if (right != NULL)
+			unordered = 1;
+		right = (*list)->next;
+		if (right)
+			left = right->prev;
 	}
-	*list = head;
 }
