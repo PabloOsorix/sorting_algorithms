@@ -14,7 +14,6 @@ void swap(int *a, int *b)
 	*a = *b;
 	*b = t;
 }
-
 /**
  * partition - Function that takes last element as pivot, places
  * the pivot element at its correct position in sorted
@@ -46,7 +45,6 @@ int partition(int *array, int low, int high, size_t size)
 	}
 	return (i);
 }
-
 /**
  * real_quick_sort - Function that sorts an array of
  * integers in ascending order using the Quick sort algorithm
