@@ -1,5 +1,4 @@
 #include "sort.h"
-
 /**
  * selection_sort - function that sort an array with
  * the selection sort algorithm.
