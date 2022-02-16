@@ -13,12 +13,13 @@ void selection_sort(int *array, size_t size)
 	char status = 'N';
 	int tmp;
 
-	if (size < 2)
+	if (!array || size <= 2)
 		return;
-	for (i = 0; array[i] != '\0' && i < size; i++)
+
+	for (i = 0; array && i < size; i++)
 	{
 		tmp = i;
-		for (j = i + 1; array && j <= size; j++)
+		for (j = i + 1; array && j < size; j++)
 		{
 			if (array[j] < array[tmp])
 			{
