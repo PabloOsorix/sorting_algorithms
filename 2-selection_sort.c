@@ -4,9 +4,8 @@
  * the selection sort algorithm.
  * @array: array to sort.
  * @size: of the array.
- * Return: Void
+ * Return: Void.
  */
-
 void selection_sort(int *array, size_t size)
 {
 	size_t i, j;
